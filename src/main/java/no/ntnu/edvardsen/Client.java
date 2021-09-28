@@ -15,16 +15,15 @@ public class Client {
 
         try {
             // Establish connection to the remote server
-            Socket socket = new Socket("ntnu.no", 80);
+            Socket socket = new Socket("localhost", 1234);
             System.out.println("Successfully connected");
 
-            // Send HTTP request to server
-            String commandToSend = "Get / HTTP/1.0";
+            // Send three words to the server
+            String commandToSend = "Hello from Client!";
             OutputStream out = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(out, true);
             writer.println(commandToSend);
             writer.println("");
-            //out.write(commandToSend.getBytes());
 
             // Get HTTP response from the server
             InputStream in = socket.getInputStream();
@@ -33,7 +32,7 @@ public class Client {
             do {
                 oneResponseLine = reader.readLine();
                 if (oneResponseLine != null) {
-                    System.out.println(oneResponseLine);
+                    System.out.println("SERVER: " + oneResponseLine);
                 }
             } while (oneResponseLine != null);
 
