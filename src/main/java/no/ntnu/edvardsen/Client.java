@@ -1,8 +1,6 @@
 package no.ntnu.edvardsen;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -21,22 +19,23 @@ public class Client {
             System.out.println("Successfully connected");
 
             // Send HTTP request to server
-            String commandToSend = "Get / HTTP/1.0\r\n\r\n";
+            String commandToSend = "Get / HTTP/1.0";
             OutputStream out = socket.getOutputStream();
-            out.write(commandToSend.getBytes());
+            PrintWriter writer = new PrintWriter(out, true);
+            writer.println(commandToSend);
+            writer.println("");
+            //out.write(commandToSend.getBytes());
 
             // Get HTTP response from the server
             InputStream in = socket.getInputStream();
-            byte[] buffer = new byte[10000];
-            int bytesReceived;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String oneResponseLine;
             do {
-                bytesReceived = in.read(buffer);
-                String responsePart = new String(buffer);
-                if (bytesReceived > 0) {
-                    //System.out.println("Received " + bytesReceived + " bytes: ");
-                    System.out.print(responsePart);
+                oneResponseLine = reader.readLine();
+                if (oneResponseLine != null) {
+                    System.out.println(oneResponseLine);
                 }
-            } while (bytesReceived > 0);
+            } while (oneResponseLine != null);
 
             // Data transfer
 
